@@ -23,10 +23,9 @@ export default function PreDictionaryProgress({ tableName, onComplete }: PreDict
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
-    let startTime = Date.now();
+    const startTime = Date.now();
     let currentStepStartTime = startTime;
     let stepIndex = 0;
-    let accumulatedDuration = 0;
 
     const updateProgress = () => {
       const now = Date.now();
@@ -40,7 +39,6 @@ export default function PreDictionaryProgress({ tableName, onComplete }: PreDict
           stepIndex++;
           currentStepStartTime = now;
           setCurrentStep(stepIndex);
-          accumulatedDuration += currentStepDuration;
         }
 
         const progressValue = (elapsedTotal / totalDuration) * 100;
