@@ -1,8 +1,9 @@
 'use client';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { collection, query, orderBy, limit, getDocs, startAfter, DocumentData } from 'firebase/firestore';
+import { collection, query, orderBy, limit, getDocs, startAfter, DocumentData, where } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { useSearchParams } from 'next/navigation';
 
 interface Tabla {
   id: string;
@@ -14,6 +15,8 @@ interface Tabla {
 }
 
 export default function TablasTable() {
+  const searchParams = useSearchParams();
+  const ingestaId = searchParams.get('ingestaId');
   const [tablas, setTablas] = useState<Tabla[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -23,16 +26,27 @@ export default function TablasTable() {
   const fetchTablas = useCallback(async (page = 1) => {
     try {
       setLoading(true);
-      let q = query(
+      let baseQuery = query(
         collection(db, 'tablas'),
-        orderBy('fechaCreacion', 'desc'),
+        orderBy('fechaCreacion', 'desc')
+      );
+
+      if (ingestaId) {
+        baseQuery = query(
+          collection(db, 'tablas'),
+          where('ingestaId', '==', ingestaId),
+          orderBy('fechaCreacion', 'desc')
+        );
+      }
+
+      let q = query(
+        baseQuery,
         limit(ITEMS_PER_PAGE)
       );
 
       if (page > 1 && lastDoc) {
         q = query(
-          collection(db, 'tablas'),
-          orderBy('fechaCreacion', 'desc'),
+          baseQuery,
           startAfter(lastDoc),
           limit(ITEMS_PER_PAGE)
         );
@@ -53,7 +67,7 @@ export default function TablasTable() {
     } finally {
       setLoading(false);
     }
-  }, [lastDoc]);
+  }, [lastDoc, ingestaId]);
 
   useEffect(() => {
     if (!initialFetchDone.current) {

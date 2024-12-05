@@ -4,6 +4,7 @@ import { collection, query, orderBy, limit, getDocs, startAfter, DocumentData, d
 import { db } from '@/firebase/config';
 import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import AddTablaForm from './AddTablaForm';
+import { useRouter } from 'next/navigation';
 
 interface Ingesta {
   id: string;
@@ -16,6 +17,7 @@ interface Ingesta {
 }
 
 export default function IngestasTable() {
+  const router = useRouter();
   const [ingestas, setIngestas] = useState<Ingesta[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -115,6 +117,10 @@ export default function IngestasTable() {
     }
   };
 
+  const handleRowClick = (ingestaId: string) => {
+    router.push(`/tablas?ingestaId=${ingestaId}`);
+  };
+
   if (loading) {
     return <div className="text-center py-4">Loading...</div>;
   }
@@ -135,7 +141,16 @@ export default function IngestasTable() {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {ingestas.map((ingesta) => (
-              <tr key={ingesta.id} className="hover:bg-gray-50">
+              <tr 
+                key={ingesta.id} 
+                className="hover:bg-gray-50 cursor-pointer"
+                onClick={(e) => {
+                  // Prevent row click if clicking on action buttons
+                  if (!(e.target as HTMLElement).closest('.actions-cell')) {
+                    handleRowClick(ingesta.id);
+                  }
+                }}
+              >
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{ingesta.ticketJira}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{ingesta.nombreProyecto}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{ingesta.fechaCreacion}</td>
@@ -145,7 +160,7 @@ export default function IngestasTable() {
                     {ingesta.estado}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 actions-cell">
                   <div className="flex space-x-3">
                     <PencilIcon className="h-5 w-5 text-blue-600 cursor-pointer" />
                     <div className="relative group">
