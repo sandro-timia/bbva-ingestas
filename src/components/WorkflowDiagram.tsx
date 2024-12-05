@@ -36,10 +36,10 @@ export default function WorkflowDiagram({ tablaName }: WorkflowDiagramProps) {
 
       {/* Workflow Diagram */}
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between max-w-6xl mx-auto">
+        <div className="flex items-center max-w-6xl mx-auto">
           {/* Sample Component */}
           <div className="w-40 flex-shrink-0">
-            <div className="border rounded-lg p-4 bg-white shadow-sm text-center">
+            <div className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm text-center">
               <div className="flex items-center justify-center mb-2">
                 <span className="text-sm font-medium">Muestra</span>
                 <ArrowUpTrayIcon className="h-4 w-4 text-gray-500 ml-2" />
@@ -49,12 +49,12 @@ export default function WorkflowDiagram({ tablaName }: WorkflowDiagramProps) {
           </div>
 
           {/* Connecting Line */}
-          <div className="w-20 h-[2px] bg-gray-200" />
+          <div className="h-[1px] w-20 bg-gray-200 -mx-px" />
 
           {/* Pre-dictionary Component */}
           <div className="w-64 flex-shrink-0">
-            <div className="border rounded-lg bg-white shadow-sm">
-              <div className="border-b p-2 flex items-center justify-between">
+            <div className="border border-gray-200 rounded-lg bg-white shadow-sm">
+              <div className="border-b border-gray-200 p-2 flex items-center justify-between">
                 <PlayIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
                 <span className="text-xs text-gray-500">0/9</span>
                 <div className="flex space-x-2">
@@ -69,12 +69,12 @@ export default function WorkflowDiagram({ tablaName }: WorkflowDiagramProps) {
           </div>
 
           {/* Connecting Line */}
-          <div className="w-20 h-[2px] bg-gray-200" />
+          <div className="h-[1px] w-20 bg-gray-200 -mx-px" />
 
           {/* Dictionary Component */}
           <div className="w-64 flex-shrink-0">
-            <div className="border rounded-lg bg-white shadow-sm">
-              <div className="border-b p-2 flex items-center justify-between">
+            <div className="border border-gray-200 rounded-lg bg-white shadow-sm">
+              <div className="border-b border-gray-200 p-2 flex items-center justify-between">
                 <PlayIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
                 <span className="text-xs text-gray-500">0/9</span>
                 <div className="flex space-x-2">
@@ -89,11 +89,11 @@ export default function WorkflowDiagram({ tablaName }: WorkflowDiagramProps) {
           </div>
 
           {/* Connecting Line */}
-          <div className="w-20 h-[2px] bg-gray-200" />
+          <div className="h-[1px] w-20 bg-gray-200 -mx-px" />
 
           {/* Nebula Component */}
           <div className="w-40 flex-shrink-0">
-            <div className="border rounded-lg p-4 bg-white shadow-sm text-center">
+            <div className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm text-center">
               <h3 className="text-sm font-medium">Cargar en Nebula</h3>
             </div>
           </div>
