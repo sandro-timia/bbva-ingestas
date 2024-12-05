@@ -133,8 +133,20 @@ export default function IngestasTable() {
                           setIsAddTablaOpen(true);
                         }}
                       />
-                      <div className="absolute z-50 invisible group-hover:visible bg-gray-900 text-white text-xs rounded py-1 px-2 
-                        -translate-x-1/2 left-1/2 -bottom-8 whitespace-nowrap">
+                      <div className="fixed z-[9999] invisible group-hover:visible bg-gray-900 text-white text-xs rounded py-1 px-2 
+                        transform -translate-x-1/2 whitespace-nowrap"
+                        style={{
+                          left: 'var(--mouse-x)',
+                          top: 'var(--mouse-y)'
+                        }}
+                        onMouseEnter={(e) => {
+                          const rect = e.currentTarget.parentElement?.getBoundingClientRect();
+                          if (rect) {
+                            e.currentTarget.style.setProperty('--mouse-x', `${rect.left + rect.width/2}px`);
+                            e.currentTarget.style.setProperty('--mouse-y', `${rect.top + rect.height + 5}px`);
+                          }
+                        }}
+                      >
                         Añadir Tabla
                       </div>
                     </div>
