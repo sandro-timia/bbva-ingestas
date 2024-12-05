@@ -58,7 +58,6 @@ export default function TablasTable() {
   useEffect(() => {
     if (!initialFetchDone.current) {
       const initializeData = async () => {
-        const snapshot = await getDocs(collection(db, 'tablas'));
         await fetchTablas(1);
         initialFetchDone.current = true;
       };
