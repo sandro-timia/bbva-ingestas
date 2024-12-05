@@ -1,8 +1,11 @@
+'use client';
+import { useState } from 'react';
 import { MagnifyingGlassIcon, BellIcon, HomeIcon, PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Image from "next/image";
+import CreateIngestaForm from '@/components/CreateIngestaForm';
 
 export default function Home() {
+  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+
   return (
     <div className="bg-gray-50">
       {/* Header */}
@@ -39,7 +42,10 @@ export default function Home() {
               className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
-          <button className="ml-4 bg-[#0A3977] text-white px-4 py-2 rounded-md flex items-center">
+          <button 
+            onClick={() => setIsCreateFormOpen(true)}
+            className="ml-4 bg-[#0A3977] text-white px-4 py-2 rounded-md flex items-center"
+          >
             <PlusIcon className="h-5 w-5 mr-2" />
             Crear Ingesta
           </button>
@@ -92,6 +98,12 @@ export default function Home() {
           <button className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Next</button>
         </div>
       </main>
+
+      {/* Add the CreateIngestaForm component */}
+      <CreateIngestaForm 
+        isOpen={isCreateFormOpen}
+        onClose={() => setIsCreateFormOpen(false)}
+      />
     </div>
   );
 }
