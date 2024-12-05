@@ -2,7 +2,7 @@
 
 import { 
   BeakerIcon, 
-  UserIcon, 
+  TableCellsIcon, 
   GlobeAltIcon 
 } from "@heroicons/react/24/solid";
 import Link from "next/link";
@@ -29,7 +29,7 @@ export default function Sidebar() {
             pathname === '/tablas' ? 'bg-[#0067B2]' : 'hover:bg-[#0067B2]/50'
           }`}
         >
-          <UserIcon className="w-6 h-6 text-white" />
+          <TableCellsIcon className="w-6 h-6 text-white" />
         </Link>
       </div>
 
