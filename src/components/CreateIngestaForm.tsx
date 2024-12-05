@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { db } from '@/lib/firebase/client';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import ConfettiEffect from './ConfettiEffect';
 
 interface CreateIngestaFormProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export default function CreateIngestaForm({ isOpen, onClose }: CreateIngestaForm
     fechaFin: '',
   });
   const [error, setError] = useState<string>('');
+  const [showConfetti, setShowConfetti] = useState(false);
 
   if (!isOpen) return null;
 
@@ -38,16 +40,26 @@ export default function CreateIngestaForm({ isOpen, onClose }: CreateIngestaForm
       });
 
       console.log('Ingesta created with ID: ', docRef.id);
-      onClose();
-      // You might want to refresh the ingestas list here
+      setShowConfetti(true);
+      // onClose will be called after confetti animation completes
     } catch (err) {
       setError('Error al crear la ingesta');
       console.error('Error adding document: ', err);
     }
   };
 
+  const handleConfettiComplete = () => {
+    setShowConfetti(false);
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <ConfettiEffect 
+        isActive={showConfetti} 
+        onComplete={handleConfettiComplete}
+      />
+      
       <div className="bg-white rounded-lg p-8 max-w-md w-full relative">
         <button
           onClick={onClose}
