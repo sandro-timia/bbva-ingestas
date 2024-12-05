@@ -1,6 +1,5 @@
 'use client';
-import { motion } from 'framer-motion';
-import { ArrowLeftIcon, PlayIcon, EyeIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import { PlayIcon, EyeIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { ArrowUpTrayIcon } from '@heroicons/react/24/solid';
 
 interface WorkflowDiagramProps {
@@ -16,16 +15,19 @@ export default function WorkflowDiagram({ tablaName }: WorkflowDiagramProps) {
           <button
             disabled
             className="py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 cursor-not-allowed"
+            title={`Refinamiento para ${tablaName}`}
           >
             Refinamiento
           </button>
           <button
             className="py-4 px-1 border-b-2 font-medium text-sm text-[#00A3FF] border-[#00A3FF]"
+            title={`Gobierno del Dato para ${tablaName}`}
           >
             Gobierno del Dato
           </button>
           <button
             className="py-4 px-1 border-b-2 font-medium text-sm text-[#0A3977] border-transparent hover:border-[#0A3977]/20"
+            title={`Componentes de Ingesta para ${tablaName}`}
           >
             Componentes de Ingesta
           </button>
