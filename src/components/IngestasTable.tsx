@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { collection, query, orderBy, limit, getDocs, startAfter, DocumentData } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
@@ -20,6 +20,9 @@ export default function IngestasTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const ITEMS_PER_PAGE = 5;
+  
+  // Use ref to prevent infinite loops
+  const initialFetchDone = useRef(false);
 
   const fetchIngestas = useCallback(async (page = 1) => {
     try {
@@ -57,24 +60,27 @@ export default function IngestasTable() {
 
       setIngestas(ingestasData);
       setCurrentPage(page);
-      setLoading(false);
     } catch (error) {
       console.error('Error fetching ingestas:', error);
+    } finally {
       setLoading(false);
     }
   }, [lastDoc]);
 
-  // Get total pages on component mount
+  // Initial data fetch
   useEffect(() => {
-    const getTotalPages = async () => {
-      const snapshot = await getDocs(collection(db, 'ingestas'));
-      const total = Math.ceil(snapshot.size / ITEMS_PER_PAGE);
-      setTotalPages(total);
-    };
+    if (!initialFetchDone.current) {
+      const initializeData = async () => {
+        const snapshot = await getDocs(collection(db, 'ingestas'));
+        const total = Math.ceil(snapshot.size / ITEMS_PER_PAGE);
+        setTotalPages(total);
+        await fetchIngestas(1);
+        initialFetchDone.current = true;
+      };
 
-    getTotalPages();
-    fetchIngestas(1);
-  }, [fetchIngestas]);
+      initializeData();
+    }
+  }, []); // Empty dependency array
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
