@@ -69,7 +69,7 @@ export default function IngestasTable() {
     } finally {
       setLoading(false);
     }
-  }, [lastDoc]);
+  }, [lastDoc, ITEMS_PER_PAGE]);
 
   // Initial data fetch
   useEffect(() => {
@@ -84,7 +84,7 @@ export default function IngestasTable() {
 
       initializeData();
     }
-  }, []); // Empty dependency array
+  }, [fetchIngestas, ITEMS_PER_PAGE]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
