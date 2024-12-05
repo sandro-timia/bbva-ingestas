@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { collection, query, orderBy, limit, getDocs, startAfter, DocumentData } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import AddTablaForm from './AddTablaForm';
 
 interface Ingesta {
   id: string;
@@ -21,6 +22,8 @@ export default function IngestasTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const ITEMS_PER_PAGE = 5;
+  const [selectedIngesta, setSelectedIngesta] = useState<{ id: string; ticketJira: string } | null>(null);
+  const [isAddTablaOpen, setIsAddTablaOpen] = useState(false);
   
   // Use ref to prevent infinite loops
   const initialFetchDone = useRef(false);
@@ -122,7 +125,18 @@ export default function IngestasTable() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <div className="flex space-x-3">
                     <PencilIcon className="h-5 w-5 text-blue-600 cursor-pointer" />
-                    <PlusIcon className="h-5 w-5 text-blue-600 cursor-pointer" />
+                    <div className="relative group">
+                      <PlusIcon 
+                        className="h-5 w-5 text-blue-600 cursor-pointer"
+                        onClick={() => {
+                          setSelectedIngesta({ id: ingesta.id, ticketJira: ingesta.ticketJira });
+                          setIsAddTablaOpen(true);
+                        }}
+                      />
+                      <div className="absolute z-10 invisible group-hover:visible bg-gray-900 text-white text-xs rounded py-1 px-2 -right-16 top-6">
+                        Añadir Tabla
+                      </div>
+                    </div>
                     <TrashIcon className="h-5 w-5 text-blue-600 cursor-pointer" />
                   </div>
                 </td>
@@ -162,6 +176,18 @@ export default function IngestasTable() {
           Next
         </button>
       </div>
+
+      {selectedIngesta && (
+        <AddTablaForm
+          isOpen={isAddTablaOpen}
+          onClose={() => {
+            setIsAddTablaOpen(false);
+            setSelectedIngesta(null);
+          }}
+          ingestaId={selectedIngesta.id}
+          ticketJira={selectedIngesta.ticketJira}
+        />
+      )}
     </div>
   );
 } 
