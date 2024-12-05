@@ -7,10 +7,18 @@ type TabType = 'refinamiento' | 'gobierno' | 'componentes';
 
 interface WorkflowDiagramProps {
   tablaName: string;
+  solicitudURL?: string;
 }
 
-export default function WorkflowDiagram({ tablaName }: WorkflowDiagramProps) {
+export default function WorkflowDiagram({ tablaName, solicitudURL }: WorkflowDiagramProps) {
   const [activeTab, setActiveTab] = useState<TabType>('gobierno');
+
+  const handleViewClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (solicitudURL) {
+      window.open(solicitudURL, '_blank');
+    }
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -40,7 +48,11 @@ export default function WorkflowDiagram({ tablaName }: WorkflowDiagramProps) {
                     <span className="text-xs text-gray-500">0/9</span>
                     <div className="flex space-x-2">
                       <ArrowPathIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
-                      <EyeIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
+                      <EyeIcon 
+                        className="h-4 w-4 text-gray-600 cursor-pointer hover:text-blue-600 transition-colors"
+                        onClick={handleViewClick}
+                        title="Ver solicitud"
+                      />
                     </div>
                   </div>
                   <div className="p-4 text-center">
@@ -60,7 +72,11 @@ export default function WorkflowDiagram({ tablaName }: WorkflowDiagramProps) {
                     <span className="text-xs text-gray-500">0/9</span>
                     <div className="flex space-x-2">
                       <ArrowPathIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
-                      <EyeIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
+                      <EyeIcon 
+                        className="h-4 w-4 text-gray-600 cursor-pointer hover:text-blue-600 transition-colors"
+                        onClick={handleViewClick}
+                        title="Ver solicitud"
+                      />
                     </div>
                   </div>
                   <div className="p-4 text-center">

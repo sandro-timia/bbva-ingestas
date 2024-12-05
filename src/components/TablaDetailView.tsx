@@ -18,6 +18,7 @@ interface TablaDetail {
   fechaCreacion: string;
   estado: string;
   ingestaId: string;
+  solicitudURL?: string;
 }
 
 export default function TablaDetailView({ onBack, tablaId }: TablaDetailViewProps) {
@@ -30,9 +31,13 @@ export default function TablaDetailView({ onBack, tablaId }: TablaDetailViewProp
         const tablaDoc = await getDoc(doc(db, 'tablas', tablaId));
         if (tablaDoc.exists()) {
           const data = tablaDoc.data();
+          const ingestaDoc = await getDoc(doc(db, 'ingestas', data.ingestaId));
+          const ingestaData = ingestaDoc.exists() ? ingestaDoc.data() : null;
+          
           setTabla({
             ...data,
             fechaCreacion: data.fechaCreacion?.toDate().toLocaleDateString() || '',
+            solicitudURL: ingestaData?.solicitudURL || '',
           } as TablaDetail);
         }
       } catch (error) {
@@ -69,7 +74,10 @@ export default function TablaDetailView({ onBack, tablaId }: TablaDetailViewProp
         {loading ? (
           <div className="text-center py-4">Loading...</div>
         ) : tabla ? (
-          <WorkflowDiagram tablaName={tabla.nombreLegacy} />
+          <WorkflowDiagram 
+            tablaName={tabla.nombreLegacy} 
+            solicitudURL={tabla.solicitudURL}
+          />
         ) : (
           <div className="text-center py-4 text-gray-500">No se encontró la tabla</div>
         )}
