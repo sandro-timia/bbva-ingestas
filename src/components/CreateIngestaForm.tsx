@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { db } from '@/lib/firebase/client';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+'use client';
+import { Fragment, useState } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import ConfettiEffect from './ConfettiEffect';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '@/firebase/config';
 
 interface CreateIngestaFormProps {
   isOpen: boolean;
@@ -13,127 +14,162 @@ export default function CreateIngestaForm({ isOpen, onClose }: CreateIngestaForm
   const [formData, setFormData] = useState({
     ticketJira: '',
     nombreProyecto: '',
-    nombreModelo: '',
+    fechaCreacion: '',
     fechaFin: '',
+    estado: 'Pendiente',
+    solicitudURL: ''
   });
-  const [error, setError] = useState<string>('');
-  const [showConfetti, setShowConfetti] = useState(false);
-
-  if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-
-    if (!formData.ticketJira || !formData.nombreProyecto || !formData.nombreModelo) {
-      setError('Por favor complete todos los campos obligatorios');
-      return;
-    }
-
     try {
-      const ingestasRef = collection(db, 'ingestas');
-      const docRef = await addDoc(ingestasRef, {
+      await addDoc(collection(db, 'ingestas'), {
         ...formData,
-        fechaCreacion: serverTimestamp(),
-        estado: 'pendiente',
-        fechaFin: formData.fechaFin ? new Date(formData.fechaFin) : null,
+        fechaCreacion: new Date(formData.fechaCreacion),
+        fechaFin: new Date(formData.fechaFin),
+        createdAt: new Date()
       });
-
-      console.log('Ingesta created with ID: ', docRef.id);
-      setShowConfetti(true);
-      // onClose will be called after confetti animation completes
-    } catch (err) {
-      setError('Error al crear la ingesta');
-      console.error('Error adding document: ', err);
+      onClose();
+      setFormData({
+        ticketJira: '',
+        nombreProyecto: '',
+        fechaCreacion: '',
+        fechaFin: '',
+        estado: 'Pendiente',
+        solicitudURL: ''
+      });
+    } catch (error) {
+      console.error('Error creating ingesta:', error);
     }
-  };
-
-  const handleConfettiComplete = () => {
-    setShowConfetti(false);
-    onClose();
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <ConfettiEffect 
-        isActive={showConfetti} 
-        onComplete={handleConfettiComplete}
-      />
-      
-      <div className="bg-white rounded-lg p-8 max-w-md w-full relative">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-        >
-          <XMarkIcon className="h-6 w-6" />
-        </button>
+    <Transition.Root show={isOpen} as={Fragment}>
+      <Dialog as="div" className="relative z-50" onClose={onClose}>
+        <div className="fixed inset-0 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+              <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
+                <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                  <div className="flex-1">
+                    <div className="bg-[#0A3977] px-4 py-6 sm:px-6">
+                      <div className="flex items-center justify-between">
+                        <Dialog.Title className="text-base font-semibold leading-6 text-white">
+                          Crear Ingesta
+                        </Dialog.Title>
+                        <div className="ml-3 flex h-7 items-center">
+                          <button
+                            type="button"
+                            className="rounded-md bg-[#0A3977] text-white hover:text-gray-300"
+                            onClick={onClose}
+                          >
+                            <XMarkIcon className="h-6 w-6" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
 
-        <h2 className="text-2xl font-bold text-[#0A3977] mb-6">Crear Nueva Ingesta</h2>
+                    <form onSubmit={handleSubmit} className="flex-1 divide-y divide-gray-200 px-4 py-6 sm:px-6">
+                      <div className="space-y-6 pb-5">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-900">
+                            Ticket Jira
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            value={formData.ticketJira}
+                            onChange={(e) => setFormData({ ...formData, ticketJira: e.target.value })}
+                            className="mt-2 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600"
+                          />
+                        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Ticket Jira *
-            </label>
-            <input
-              type="text"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              value={formData.ticketJira}
-              onChange={(e) => setFormData({ ...formData, ticketJira: e.target.value })}
-            />
+                        <div>
+                          <label className="block text-sm font-medium text-gray-900">
+                            Solicitud de Información
+                          </label>
+                          <input
+                            type="url"
+                            required
+                            placeholder="https://..."
+                            value={formData.solicitudURL}
+                            onChange={(e) => setFormData({ ...formData, solicitudURL: e.target.value })}
+                            className="mt-2 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-900">
+                            Nombre del Proyecto
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            value={formData.nombreProyecto}
+                            onChange={(e) => setFormData({ ...formData, nombreProyecto: e.target.value })}
+                            className="mt-2 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-900">
+                            Fecha Creación
+                          </label>
+                          <input
+                            type="datetime-local"
+                            required
+                            value={formData.fechaCreacion}
+                            onChange={(e) => setFormData({ ...formData, fechaCreacion: e.target.value })}
+                            className="mt-2 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-900">
+                            Fecha Fin
+                          </label>
+                          <input
+                            type="datetime-local"
+                            required
+                            value={formData.fechaFin}
+                            onChange={(e) => setFormData({ ...formData, fechaFin: e.target.value })}
+                            className="mt-2 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-900">
+                            Estado
+                          </label>
+                          <select
+                            required
+                            value={formData.estado}
+                            onChange={(e) => setFormData({ ...formData, estado: e.target.value })}
+                            className="mt-2 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600"
+                          >
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="En proceso">En proceso</option>
+                            <option value="Finalizada">Finalizada</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end pt-5">
+                        <button
+                          type="submit"
+                          className="rounded-md bg-[#0A3977] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700"
+                        >
+                          Crear
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </Dialog.Panel>
+            </div>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nombre del Proyecto *
-            </label>
-            <input
-              type="text"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              value={formData.nombreProyecto}
-              onChange={(e) => setFormData({ ...formData, nombreProyecto: e.target.value })}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nombre del Modelo *
-            </label>
-            <input
-              type="text"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              value={formData.nombreModelo}
-              onChange={(e) => setFormData({ ...formData, nombreModelo: e.target.value })}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Fecha Fin
-            </label>
-            <input
-              type="date"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              value={formData.fechaFin}
-              onChange={(e) => setFormData({ ...formData, fechaFin: e.target.value })}
-            />
-          </div>
-
-          {error && (
-            <p className="text-red-500 text-sm mt-2">{error}</p>
-          )}
-
-          <button
-            type="submit"
-            className="w-full bg-[#0A3977] text-white px-4 py-2 rounded-md hover:bg-[#0A3977]/90 transition-colors"
-          >
-            Crear Ingesta
-          </button>
-        </form>
-      </div>
-    </div>
+        </div>
+      </Dialog>
+    </Transition.Root>
   );
 } 
