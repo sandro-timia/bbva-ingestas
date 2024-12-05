@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { MagnifyingGlassIcon, BellIcon, HomeIcon, PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import CreateIngestaForm from '@/components/CreateIngestaForm';
+import IngestasTable from '@/components/IngestasTable';
 
 export default function Home() {
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
@@ -51,52 +52,8 @@ export default function Home() {
           </button>
         </div>
 
-        {/* Table */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-[#EEF3F8]">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">TicketJira</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Nombre del proyecto</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Fecha Creación</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Fecha Fin</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Estado</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {[1, 2, 3].map((item) => (
-                <tr key={item} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">JIRA-009</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Perfil Liquido NGA Cobranzas</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">04/12/2024</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">30/12/2024</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                      Pendiente
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <div className="flex space-x-3">
-                      <PencilIcon className="h-5 w-5 text-blue-600 cursor-pointer" />
-                      <PlusIcon className="h-5 w-5 text-blue-600 cursor-pointer" />
-                      <TrashIcon className="h-5 w-5 text-blue-600 cursor-pointer" />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        <div className="flex justify-center space-x-2 mt-6">
-          <button className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Previous</button>
-          <button className="px-3 py-2 text-sm text-white bg-[#0A3977] rounded-md">1</button>
-          <button className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">2</button>
-          <button className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">3</button>
-          <button className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Next</button>
-        </div>
+        {/* Replace the old table with the new IngestasTable component */}
+        <IngestasTable />
       </main>
 
       {/* Add the CreateIngestaForm component */}
