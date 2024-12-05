@@ -4,6 +4,7 @@ import { collection, query, orderBy, limit, getDocs, startAfter, DocumentData, w
 import { db } from '@/firebase/config';
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useSearchParams } from 'next/navigation';
+import { motion } from 'framer-motion';
 
 interface Tabla {
   id: string;
@@ -14,7 +15,11 @@ interface Tabla {
   estado: string;
 }
 
-export default function TablasTable() {
+interface TablasTableProps {
+  onRowClick: (tablaId: string) => void;
+}
+
+export default function TablasTable({ onRowClick }: TablasTableProps) {
   const searchParams = useSearchParams();
   const ingestaId = searchParams.get('ingestaId');
   const [tablas, setTablas] = useState<Tabla[]>([]);
@@ -82,7 +87,12 @@ export default function TablasTable() {
   if (loading) return <div className="text-center py-4">Loading...</div>;
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
+    <motion.div
+      initial={{ x: 0, opacity: 1, scale: 1 }}
+      exit={{ x: '-100%', opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.4, ease: 'easeInOut' }}
+      className="bg-white rounded-lg shadow overflow-hidden"
+    >
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-[#EEF3F8]">
           <tr>
@@ -96,7 +106,11 @@ export default function TablasTable() {
         </thead>
         <tbody className="divide-y divide-gray-200">
           {tablas.map((tabla) => (
-            <tr key={tabla.id} className="hover:bg-gray-50">
+            <tr 
+              key={tabla.id} 
+              onClick={() => onRowClick(tabla.id)}
+              className="hover:bg-gray-50 cursor-pointer transition-colors"
+            >
               <td className="px-6 py-4 whitespace-nowrap text-sm">{tabla.ticketJira}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm">{tabla.nombreLegacy}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm">{tabla.alias}</td>
@@ -106,8 +120,8 @@ export default function TablasTable() {
                   {tabla.estado}
                 </span>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm">
-                <div className="flex space-x-3">
+              <td className="px-6 py-4 whitespace-nowrap text-sm actions-cell">
+                <div className="flex space-x-3" onClick={e => e.stopPropagation()}>
                   <PencilIcon className="h-5 w-5 text-blue-600 cursor-pointer" />
                   <TrashIcon className="h-5 w-5 text-blue-600 cursor-pointer" />
                 </div>
@@ -116,6 +130,6 @@ export default function TablasTable() {
           ))}
         </tbody>
       </table>
-    </div>
+    </motion.div>
   );
 } 
