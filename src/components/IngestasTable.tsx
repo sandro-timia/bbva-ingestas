@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { collection, query, orderBy, limit, getDocs, startAfter, DocumentData } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
@@ -21,7 +21,7 @@ export default function IngestasTable() {
   const [totalPages, setTotalPages] = useState(1);
   const ITEMS_PER_PAGE = 5;
 
-  const fetchIngestas = async (page = 1) => {
+  const fetchIngestas = useCallback(async (page = 1) => {
     try {
       setLoading(true);
       let q;
@@ -57,7 +57,7 @@ export default function IngestasTable() {
       console.error('Error fetching ingestas:', error);
       setLoading(false);
     }
-  };
+  }, [lastDoc]);
 
   // Get total pages on component mount
   useEffect(() => {
@@ -69,7 +69,7 @@ export default function IngestasTable() {
 
     getTotalPages();
     fetchIngestas(1);
-  }, []);
+  }, [fetchIngestas]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
