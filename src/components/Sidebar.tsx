@@ -1,10 +1,10 @@
 'use client';
 
 import { 
-  FunnelIcon, 
+  BeakerIcon, 
   UserIcon, 
   GlobeAltIcon 
-} from "@heroicons/react/24/outline";
+} from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
 
@@ -21,7 +21,7 @@ export default function Sidebar() {
             pathname === '/' ? 'bg-[#0067B2]' : 'hover:bg-[#0067B2]/50'
           }`}
         >
-          <FunnelIcon className="w-6 h-6 text-white" />
+          <BeakerIcon className="w-6 h-6 text-white" />
         </Link>
         <Link 
           href="/tablas" 
