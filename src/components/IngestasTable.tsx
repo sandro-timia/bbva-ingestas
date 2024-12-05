@@ -133,7 +133,8 @@ export default function IngestasTable() {
                           setIsAddTablaOpen(true);
                         }}
                       />
-                      <div className="absolute z-10 invisible group-hover:visible bg-gray-900 text-white text-xs rounded py-1 px-2 -right-16 top-6">
+                      <div className="absolute z-50 invisible group-hover:visible bg-gray-900 text-white text-xs rounded py-1 px-2 
+                        -translate-x-1/2 left-1/2 -bottom-8 whitespace-nowrap">
                         Añadir Tabla
                       </div>
                     </div>
