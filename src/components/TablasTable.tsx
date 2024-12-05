@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { collection, query, orderBy, limit, getDocs, startAfter, DocumentData } from 'firebase/firestore';
 import { db } from '@/firebase/config';
-import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 interface Tabla {
   id: string;
@@ -17,8 +17,6 @@ export default function TablasTable() {
   const [tablas, setTablas] = useState<Tabla[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const ITEMS_PER_PAGE = 5;
   const initialFetchDone = useRef(false);
 
@@ -50,7 +48,6 @@ export default function TablasTable() {
       })) as Tabla[];
 
       setTablas(tablasData);
-      setCurrentPage(page);
     } catch (error) {
       console.error('Error fetching tablas:', error);
     } finally {
@@ -62,7 +59,6 @@ export default function TablasTable() {
     if (!initialFetchDone.current) {
       const initializeData = async () => {
         const snapshot = await getDocs(collection(db, 'tablas'));
-        setTotalPages(Math.ceil(snapshot.size / ITEMS_PER_PAGE));
         await fetchTablas(1);
         initialFetchDone.current = true;
       };
