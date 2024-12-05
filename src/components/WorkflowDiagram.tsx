@@ -35,62 +35,67 @@ export default function WorkflowDiagram({ tablaName }: WorkflowDiagramProps) {
       </div>
 
       {/* Workflow Diagram */}
-      <div className="flex items-center justify-between gap-8 px-4">
-        {/* Sample Component */}
-        <div className="flex-shrink-0 w-48">
-          <div className="border rounded-lg p-4 bg-white shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">Muestra</span>
-              <ArrowUpTrayIcon className="h-4 w-4 text-gray-500" />
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between max-w-6xl mx-auto">
+          {/* Sample Component */}
+          <div className="w-40 flex-shrink-0">
+            <div className="border rounded-lg p-4 bg-white shadow-sm text-center">
+              <div className="flex items-center justify-center mb-2">
+                <span className="text-sm font-medium">Muestra</span>
+                <ArrowUpTrayIcon className="h-4 w-4 text-gray-500 ml-2" />
+              </div>
+              <div className="text-xs text-gray-500">*.txt, *.csv</div>
             </div>
-            <div className="text-xs text-gray-500">*.txt, *.csv</div>
           </div>
-        </div>
 
-        {/* Connecting Line */}
-        <div className="flex-grow h-[2px] bg-gray-200" />
+          {/* Connecting Line */}
+          <div className="w-20 h-[2px] bg-gray-200" />
 
-        {/* Pre-dictionary Component */}
-        <div className="flex-shrink-0 w-80">
-          <div className="border rounded-lg bg-white shadow-sm">
-            <div className="border-b p-2 flex items-center justify-between">
-              <PlayIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
-              <span className="text-xs text-gray-500">0/9</span>
-              <div className="flex space-x-2">
-                <ArrowPathIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
-                <EyeIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
+          {/* Pre-dictionary Component */}
+          <div className="w-64 flex-shrink-0">
+            <div className="border rounded-lg bg-white shadow-sm">
+              <div className="border-b p-2 flex items-center justify-between">
+                <PlayIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
+                <span className="text-xs text-gray-500">0/9</span>
+                <div className="flex space-x-2">
+                  <ArrowPathIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
+                  <EyeIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
+                </div>
+              </div>
+              <div className="p-4 text-center">
+                <h3 className="text-sm font-medium">Pre-diccionario</h3>
               </div>
             </div>
-            <div className="p-4">
-              <h3 className="text-sm font-medium">Pre-diccionario</h3>
+          </div>
+
+          {/* Connecting Line */}
+          <div className="w-20 h-[2px] bg-gray-200" />
+
+          {/* Dictionary Component */}
+          <div className="w-64 flex-shrink-0">
+            <div className="border rounded-lg bg-white shadow-sm">
+              <div className="border-b p-2 flex items-center justify-between">
+                <PlayIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
+                <span className="text-xs text-gray-500">0/9</span>
+                <div className="flex space-x-2">
+                  <ArrowPathIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
+                  <EyeIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
+                </div>
+              </div>
+              <div className="p-4 text-center">
+                <h3 className="text-sm font-medium">Diccionario</h3>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Connecting Line */}
-        <div className="flex-grow h-[2px] bg-gray-200" />
+          {/* Connecting Line */}
+          <div className="w-20 h-[2px] bg-gray-200" />
 
-        {/* Dictionary Component */}
-        <div className="flex-shrink-0 w-80">
-          <div className="border rounded-lg bg-white shadow-sm">
-            <div className="border-b p-2 flex items-center justify-between">
-              <EyeIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
-              <span className="text-xs text-gray-500">0/9</span>
-              <PlayIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
+          {/* Nebula Component */}
+          <div className="w-40 flex-shrink-0">
+            <div className="border rounded-lg p-4 bg-white shadow-sm text-center">
+              <h3 className="text-sm font-medium">Cargar en Nebula</h3>
             </div>
-            <div className="p-4">
-              <h3 className="text-sm font-medium">Diccionario</h3>
-            </div>
-          </div>
-        </div>
-
-        {/* Connecting Line */}
-        <div className="flex-grow h-[2px] bg-gray-200" />
-
-        {/* Nebula Component */}
-        <div className="flex-shrink-0 w-48">
-          <div className="border rounded-lg p-4 bg-white shadow-sm">
-            <h3 className="text-sm font-medium">Cargar en Nebula</h3>
           </div>
         </div>
       </div>
