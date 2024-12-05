@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef } from 'react';
 import ReactCanvasConfetti from 'react-canvas-confetti';
+import type { Options as ConfettiOptions } from 'canvas-confetti';
 
 export default function ConfettiEffect({ isActive, onComplete }: { isActive: boolean; onComplete?: () => void }) {
-  const refAnimationInstance = useRef<((options: any) => void) | null>(null);
+  const refAnimationInstance = useRef<((options: ConfettiOptions) => void) | null>(null);
 
-  const makeShot = useCallback((particleRatio: number, opts: any) => {
+  const makeShot = useCallback((particleRatio: number, opts: Partial<ConfettiOptions>) => {
     refAnimationInstance.current?.({
       ...opts,
       origin: { y: 0.3 },
