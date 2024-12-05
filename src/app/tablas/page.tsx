@@ -1,4 +1,5 @@
 'use client';
+import { Suspense } from 'react';
 import Header from '@/components/Header';
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import TablasTable from '@/components/TablasTable';
@@ -22,8 +23,10 @@ export default function TablasPage() {
           </div>
         </div>
 
-        {/* Table Component */}
-        <TablasTable />
+        {/* Table Component wrapped in Suspense */}
+        <Suspense fallback={<div className="text-center py-4">Loading...</div>}>
+          <TablasTable />
+        </Suspense>
       </main>
     </div>
   );
