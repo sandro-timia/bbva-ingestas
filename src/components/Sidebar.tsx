@@ -1,8 +1,10 @@
 'use client';
 
 import { 
+  HomeIcon,
   BeakerIcon, 
-  TableCellsIcon, 
+  TableCellsIcon,
+  Cog6ToothIcon,  // Configuration icon
   GlobeAltIcon 
 } from "@heroicons/react/24/solid";
 import Link from "next/link";
@@ -21,6 +23,14 @@ export default function Sidebar() {
             pathname === '/' ? 'bg-[#0067B2]' : 'hover:bg-[#0067B2]/50'
           }`}
         >
+          <HomeIcon className="w-6 h-6 text-white" />
+        </Link>
+        <Link 
+          href="/ingestas" 
+          className={`p-3 rounded-lg transition-colors ${
+            pathname === '/ingestas' ? 'bg-[#0067B2]' : 'hover:bg-[#0067B2]/50'
+          }`}
+        >
           <BeakerIcon className="w-6 h-6 text-white" />
         </Link>
         <Link 
@@ -30,6 +40,14 @@ export default function Sidebar() {
           }`}
         >
           <TableCellsIcon className="w-6 h-6 text-white" />
+        </Link>
+        <Link 
+          href="/configuration" 
+          className={`p-3 rounded-lg transition-colors ${
+            pathname === '/configuration' ? 'bg-[#0067B2]' : 'hover:bg-[#0067B2]/50'
+          }`}
+        >
+          <Cog6ToothIcon className="w-6 h-6 text-white" />
         </Link>
       </div>
 

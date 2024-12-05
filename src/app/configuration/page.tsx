@@ -1,6 +1,6 @@
 'use client';
 
-export default function Home() {
+export default function ConfigurationPage() {
   return (
     <div className="bg-gray-50">
       <header className="bg-white shadow-sm">
@@ -16,4 +16,4 @@ export default function Home() {
       </main>
     </div>
   );
-}
+} 
