@@ -3,7 +3,7 @@ import { Suspense, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import TablasTable from '@/components/TablasTable';
+import TablasTableWrapper from '@/components/TablasTableWrapper';
 import TablaDetailView from '@/components/TablaDetailView';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -47,7 +47,7 @@ export default function TablasPage() {
 
               {/* Table Component wrapped in Suspense */}
               <Suspense fallback={<div className="text-center py-4">Loading...</div>}>
-                <TablasTable onRowClick={handleRowClick} />
+                <TablasTableWrapper onRowClick={handleRowClick} />
               </Suspense>
             </main>
           ) : (

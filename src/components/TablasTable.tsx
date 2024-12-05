@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { collection, query, orderBy, limit, getDocs, startAfter, DocumentData, where } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 
 interface Tabla {
@@ -17,11 +16,10 @@ interface Tabla {
 
 interface TablasTableProps {
   onRowClick: (tablaId: string) => void;
+  ingestaId: string | null;
 }
 
-export default function TablasTable({ onRowClick }: TablasTableProps) {
-  const searchParams = useSearchParams();
-  const ingestaId = searchParams.get('ingestaId');
+export default function TablasTable({ onRowClick, ingestaId }: TablasTableProps) {
   const [tablas, setTablas] = useState<Tabla[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData | null>(null);
   const [loading, setLoading] = useState(true);
