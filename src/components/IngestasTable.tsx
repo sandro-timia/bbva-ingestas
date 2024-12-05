@@ -45,10 +45,15 @@ export default function IngestasTable() {
       const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
       setLastDoc(lastVisible);
 
-      const ingestasData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Ingesta[];
+      const ingestasData = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          fechaCreacion: data.fechaCreacion?.toDate().toLocaleDateString() || '',
+          fechaFin: data.fechaFin?.toDate().toLocaleDateString() || ''
+        };
+      }) as Ingesta[];
 
       setIngestas(ingestasData);
       setCurrentPage(page);
