@@ -1,4 +1,5 @@
 'use client';
+import Header from '@/components/Header';
 import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
 import IngestasTable from '@/components/IngestasTable';
 import CreateIngestaForm from '@/components/CreateIngestaForm';
@@ -9,17 +10,7 @@ export default function IngestasPage() {
 
   return (
     <div className="bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div>
-            <h1 className="text-2xl font-bold text-[#0A3977]">PLATAFORMA INGESTAS</h1>
-            <p className="text-gray-500 text-sm">Bienvenido usuario: juanpablo.contractor@gdevtools.com</p>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
+      <Header />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h2 className="text-[#00A3FF] text-xl font-semibold mb-6">Mis Ingestas</h2>
         
