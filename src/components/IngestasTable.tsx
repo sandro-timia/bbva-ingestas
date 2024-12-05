@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { collection, query, orderBy, limit, getDocs, startAfter, DocumentData } from 'firebase/firestore';
+import { collection, query, orderBy, limit, getDocs, startAfter, DocumentData, deleteDoc, doc, where } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import AddTablaForm from './AddTablaForm';
@@ -92,6 +92,29 @@ export default function IngestasTable() {
     }
   };
 
+  const handleDeleteIngesta = async (ingestaId: string) => {
+    try {
+      // Delete all related tables first
+      const tablasQuery = query(
+        collection(db, 'tablas'),
+        where('ingestaId', '==', ingestaId)
+      );
+      const tablasSnapshot = await getDocs(tablasQuery);
+      const deleteTablas = tablasSnapshot.docs.map(doc => 
+        deleteDoc(doc.ref)
+      );
+      await Promise.all(deleteTablas);
+
+      // Then delete the ingesta
+      await deleteDoc(doc(db, 'ingestas', ingestaId));
+
+      // Refresh the table
+      fetchIngestas(currentPage);
+    } catch (error) {
+      console.error('Error deleting ingesta:', error);
+    }
+  };
+
   if (loading) {
     return <div className="text-center py-4">Loading...</div>;
   }
@@ -150,7 +173,28 @@ export default function IngestasTable() {
                         Añadir Tabla
                       </div>
                     </div>
-                    <TrashIcon className="h-5 w-5 text-blue-600 cursor-pointer" />
+                    <div className="relative group">
+                      <TrashIcon 
+                        className="h-5 w-5 text-blue-600 cursor-pointer" 
+                        onClick={() => handleDeleteIngesta(ingesta.id)}
+                      />
+                      <div className="fixed z-[9999] invisible group-hover:visible bg-gray-900 text-white text-xs rounded py-1 px-2 
+                        transform -translate-x-1/2 whitespace-nowrap"
+                        style={{
+                          left: 'var(--mouse-x)',
+                          top: 'var(--mouse-y)'
+                        }}
+                        onMouseEnter={(e) => {
+                          const rect = e.currentTarget.parentElement?.getBoundingClientRect();
+                          if (rect) {
+                            e.currentTarget.style.setProperty('--mouse-x', `${rect.left + rect.width/2}px`);
+                            e.currentTarget.style.setProperty('--mouse-y', `${rect.top + rect.height + 5}px`);
+                          }
+                        }}
+                      >
+                        Eliminar
+                      </div>
+                    </div>
                   </div>
                 </td>
               </tr>
