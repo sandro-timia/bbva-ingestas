@@ -11,6 +11,13 @@ interface CreateIngestaFormProps {
   onClose: () => void;
 }
 
+const RequiredLabel = ({ children }: { children: React.ReactNode }) => (
+  <label className="block text-sm font-medium text-gray-900">
+    {children}
+    <span className="text-red-500 ml-1">*</span>
+  </label>
+);
+
 export default function CreateIngestaForm({ isOpen, onClose }: CreateIngestaFormProps) {
   const [formData, setFormData] = useState({
     ticketJira: '',
@@ -80,9 +87,7 @@ export default function CreateIngestaForm({ isOpen, onClose }: CreateIngestaForm
                       <form onSubmit={handleSubmit} className="flex-1 divide-y divide-gray-200 px-4 py-6 sm:px-6">
                         <div className="space-y-6 pb-5">
                           <div>
-                            <label className="block text-sm font-medium text-gray-900">
-                              Ticket Jira
-                            </label>
+                            <RequiredLabel>Ticket Jira</RequiredLabel>
                             <input
                               type="text"
                               required
@@ -93,9 +98,7 @@ export default function CreateIngestaForm({ isOpen, onClose }: CreateIngestaForm
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-gray-900">
-                              Nombre del Proyecto
-                            </label>
+                            <RequiredLabel>Nombre del Proyecto</RequiredLabel>
                             <input
                               type="text"
                               required
@@ -118,9 +121,7 @@ export default function CreateIngestaForm({ isOpen, onClose }: CreateIngestaForm
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-gray-900">
-                              Solicitud de Información
-                            </label>
+                            <RequiredLabel>Solicitud de Información</RequiredLabel>
                             <input
                               type="url"
                               required
@@ -133,11 +134,10 @@ export default function CreateIngestaForm({ isOpen, onClose }: CreateIngestaForm
 
                           <div>
                             <label className="block text-sm font-medium text-gray-900">
-                              Fecha Fin
+                              Fecha Fin (opcional)
                             </label>
                             <input
                               type="datetime-local"
-                              required
                               value={formData.fechaFin}
                               onChange={(e) => setFormData({ ...formData, fechaFin: e.target.value })}
                               className="mt-2 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600"
@@ -145,9 +145,7 @@ export default function CreateIngestaForm({ isOpen, onClose }: CreateIngestaForm
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-gray-900">
-                              Estado
-                            </label>
+                            <RequiredLabel>Estado</RequiredLabel>
                             <select
                               required
                               value={formData.estado}
