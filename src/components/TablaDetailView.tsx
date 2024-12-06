@@ -77,6 +77,7 @@ export default function TablaDetailView({ onBack, tablaId }: TablaDetailViewProp
           <WorkflowDiagram 
             tablaName={tabla.nombreLegacy} 
             solicitudURL={tabla.solicitudURL}
+            tablaId={tablaId}
           />
         ) : (
           <div className="text-center py-4 text-gray-500">No se encontró la tabla</div>

@@ -3,17 +3,20 @@ import { useState } from 'react';
 import { PlayIcon, EyeIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { ArrowUpTrayIcon } from '@heroicons/react/24/solid';
 import PreDictionaryProgress from './PreDictionaryProgress';
+import CabeceraPdForm from './CabeceraPdForm';
 
 type TabType = 'refinamiento' | 'gobierno' | 'componentes';
 
 interface WorkflowDiagramProps {
   tablaName: string;
   solicitudURL?: string;
+  tablaId: string;
 }
 
-export default function WorkflowDiagram({ tablaName, solicitudURL }: WorkflowDiagramProps) {
+export default function WorkflowDiagram({ tablaName, solicitudURL, tablaId }: WorkflowDiagramProps) {
   const [activeTab, setActiveTab] = useState<TabType>('gobierno');
   const [showProgress, setShowProgress] = useState(false);
+  const [showCabeceraForm, setShowCabeceraForm] = useState(false);
 
   const handleViewClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -25,6 +28,10 @@ export default function WorkflowDiagram({ tablaName, solicitudURL }: WorkflowDia
   const handlePlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowProgress(true);
+  };
+
+  const handleProgressClick = () => {
+    setShowCabeceraForm(true);
   };
 
   const renderTabContent = () => {
@@ -56,7 +63,12 @@ export default function WorkflowDiagram({ tablaName, solicitudURL }: WorkflowDia
                         className="h-4 w-4 text-gray-600 cursor-pointer hover:text-blue-600 transition-colors"
                         onClick={handlePlayClick}
                       />
-                      <span className="text-xs text-gray-500">0/9</span>
+                      <span 
+                        className="text-xs text-gray-500 cursor-pointer hover:text-blue-600 transition-colors"
+                        onClick={handleProgressClick}
+                      >
+                        0/9
+                      </span>
                       <div className="flex space-x-2">
                         <ArrowPathIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
                         <EyeIcon 
@@ -116,6 +128,11 @@ export default function WorkflowDiagram({ tablaName, solicitudURL }: WorkflowDia
                 />
               </>
             )}
+            <CabeceraPdForm
+              isOpen={showCabeceraForm}
+              onClose={() => setShowCabeceraForm(false)}
+              tablaId={tablaId}
+            />
           </>
         );
       case 'componentes':
