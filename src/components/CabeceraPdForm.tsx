@@ -1,8 +1,8 @@
 'use client';
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, query, where, getDocs, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 
 interface CabeceraPdFormProps {
@@ -17,39 +17,102 @@ const Label = ({ children }: { children: React.ReactNode }) => (
   </label>
 );
 
+interface CabeceraPd {
+  id?: string;
+  descripcionObjetivo: string;
+  uuaRaw: string;
+  uuaMaster: string;
+  historicoRequerido: string;
+  agrupacionParticiones: string;
+}
+
 export default function CabeceraPdForm({ isOpen, onClose, tablaId }: CabeceraPdFormProps) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CabeceraPd>({
     descripcionObjetivo: '',
     uuaRaw: '',
     uuaMaster: '',
     historicoRequerido: '',
     agrupacionParticiones: ''
   });
+  const [loading, setLoading] = useState(true);
+  const [existingDocId, setExistingDocId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchExistingData = async () => {
+      if (!tablaId) return;
+      
+      try {
+        setLoading(true);
+        const q = query(collection(db, 'cabeceraPd'), where('tablaId', '==', tablaId));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0];
+          setExistingDocId(doc.id);
+          setFormData({
+            descripcionObjetivo: doc.data().descripcionObjetivo || '',
+            uuaRaw: doc.data().uuaRaw || '',
+            uuaMaster: doc.data().uuaMaster || '',
+            historicoRequerido: doc.data().historicoRequerido || '',
+            agrupacionParticiones: doc.data().agrupacionParticiones || ''
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching cabecera data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (isOpen) {
+      fetchExistingData();
+    }
+  }, [tablaId, isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const nonEmptyFields = Object.fromEntries(
-        Object.entries(formData).filter(([, value]) => value.trim() !== '')
-      );
-      
-      await addDoc(collection(db, 'cabeceraPd'), {
-        ...nonEmptyFields,
-        tablaId,
-        fechaCreacion: new Date()
-      });
+      if (existingDocId) {
+        // Update existing document
+        await updateDoc(doc(db, 'cabeceraPd', existingDocId), {
+          ...formData,
+          fechaActualizacion: new Date()
+        });
+      } else {
+        // Create new document
+        await addDoc(collection(db, 'cabeceraPd'), {
+          ...formData,
+          tablaId,
+          fechaCreacion: new Date()
+        });
+      }
       onClose();
-      setFormData({
-        descripcionObjetivo: '',
-        uuaRaw: '',
-        uuaMaster: '',
-        historicoRequerido: '',
-        agrupacionParticiones: ''
-      });
     } catch (error) {
-      console.error('Error creating cabecera:', error);
+      console.error('Error saving cabecera:', error);
     }
   };
+
+  if (loading) {
+    return (
+      <Transition.Root show={isOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={onClose}>
+          <div className="fixed inset-0 overflow-hidden">
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+                <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
+                  <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                    <div className="flex-1 p-4">
+                      <div className="text-center">Loading...</div>
+                    </div>
+                  </div>
+                </Dialog.Panel>
+              </div>
+            </div>
+          </div>
+        </Dialog>
+      </Transition.Root>
+    );
+  }
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
