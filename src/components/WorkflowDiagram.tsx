@@ -18,7 +18,7 @@ export default function WorkflowDiagram({ tablaName, solicitudURL, tablaId }: Wo
   const [activeTab, setActiveTab] = useState<TabType>('gobierno');
   const [showProgress, setShowProgress] = useState(false);
   const [showCabeceraForm, setShowCabeceraForm] = useState(false);
-  const { filledFields, totalFields, loading } = useCabeceraPd(tablaId);
+  const { filledFields, totalFields, loading, refresh } = useCabeceraPd(tablaId);
 
   const handleViewClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -134,7 +134,7 @@ export default function WorkflowDiagram({ tablaName, solicitudURL, tablaId }: Wo
               isOpen={showCabeceraForm}
               onClose={() => {
                 setShowCabeceraForm(false);
-                useCabeceraPd(tablaId);
+                refresh();
               }}
               tablaId={tablaId}
             />
