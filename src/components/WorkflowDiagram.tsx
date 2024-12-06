@@ -4,6 +4,7 @@ import { PlayIcon, EyeIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { ArrowUpTrayIcon } from '@heroicons/react/24/solid';
 import PreDictionaryProgress from './PreDictionaryProgress';
 import CabeceraPdForm from './CabeceraPdForm';
+import { useCabeceraPd } from '@/hooks/useCabeceraPd';
 
 type TabType = 'refinamiento' | 'gobierno' | 'componentes';
 
@@ -17,6 +18,7 @@ export default function WorkflowDiagram({ tablaName, solicitudURL, tablaId }: Wo
   const [activeTab, setActiveTab] = useState<TabType>('gobierno');
   const [showProgress, setShowProgress] = useState(false);
   const [showCabeceraForm, setShowCabeceraForm] = useState(false);
+  const { filledFields, totalFields, loading } = useCabeceraPd(tablaId);
 
   const handleViewClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -67,7 +69,7 @@ export default function WorkflowDiagram({ tablaName, solicitudURL, tablaId }: Wo
                         className="text-xs text-gray-500 cursor-pointer hover:text-blue-600 transition-colors"
                         onClick={handleProgressClick}
                       >
-                        0/9
+                        {loading ? '...' : `${filledFields}/${totalFields}`}
                       </span>
                       <div className="flex space-x-2">
                         <ArrowPathIcon className="h-4 w-4 text-gray-600 cursor-pointer" />
@@ -130,7 +132,10 @@ export default function WorkflowDiagram({ tablaName, solicitudURL, tablaId }: Wo
             )}
             <CabeceraPdForm
               isOpen={showCabeceraForm}
-              onClose={() => setShowCabeceraForm(false)}
+              onClose={() => {
+                setShowCabeceraForm(false);
+                useCabeceraPd(tablaId);
+              }}
               tablaId={tablaId}
             />
           </>
