@@ -10,9 +10,18 @@ interface CabeceraPd {
   agrupacionParticiones: string;
 }
 
+// Define the fields we want to count
+const FORM_FIELDS = [
+  'descripcionObjetivo',
+  'uuaRaw',
+  'uuaMaster',
+  'historicoRequerido',
+  'agrupacionParticiones'
+] as const;
+
 export function useCabeceraPd(tablaId: string) {
   const [filledFields, setFilledFields] = useState(0);
-  const [totalFields, setTotalFields] = useState(0);
+  const [totalFields, setTotalFields] = useState(FORM_FIELDS.length);
   const [loading, setLoading] = useState(true);
 
   const fetchCabeceraPd = useCallback(async () => {
@@ -23,24 +32,17 @@ export function useCabeceraPd(tablaId: string) {
       
       if (!querySnapshot.empty) {
         const doc = querySnapshot.docs[0];
-        const data = doc.data() as CabeceraPd;
+        const data = doc.data();
         
-        // Count non-empty fields
-        const filled = Object.values(data).filter(value => 
-          value !== null && value !== undefined && value.trim() !== ''
-        ).length;
-        
-        // Count total fields (excluding id, tablaId, and dates)
-        const total = Object.keys(data).filter(key => 
-          !['id', 'tablaId', 'fechaCreacion', 'fechaActualizacion'].includes(key)
-        ).length;
+        // Count filled fields by checking each field in our predefined list
+        const filled = FORM_FIELDS.reduce((count, field) => {
+          const value = data[field];
+          return value && value.trim() !== '' ? count + 1 : count;
+        }, 0);
         
         setFilledFields(filled);
-        setTotalFields(total);
       } else {
-        // If no document exists, set total fields based on interface
         setFilledFields(0);
-        setTotalFields(5); // Number of fields in CabeceraPd interface
       }
     } catch (error) {
       console.error('Error fetching cabecera data:', error);
@@ -53,5 +55,10 @@ export function useCabeceraPd(tablaId: string) {
     fetchCabeceraPd();
   }, [fetchCabeceraPd]);
 
-  return { filledFields, totalFields, loading, refresh: fetchCabeceraPd };
+  return { 
+    filledFields, 
+    totalFields, 
+    loading, 
+    refresh: fetchCabeceraPd 
+  };
 } 
