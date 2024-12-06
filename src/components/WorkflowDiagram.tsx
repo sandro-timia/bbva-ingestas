@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { PlayIcon, EyeIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { ArrowUpTrayIcon } from '@heroicons/react/24/solid';
 import PreDictionaryProgress from './PreDictionaryProgress';
@@ -20,6 +20,8 @@ export default function WorkflowDiagram({ tablaName, solicitudURL, tablaId }: Wo
   const [showProgress, setShowProgress] = useState(false);
   const [showCabeceraForm, setShowCabeceraForm] = useState(false);
   const { filledFields, totalFields, loading, refresh } = useCabeceraPd(tablaId);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleViewClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -39,6 +41,27 @@ export default function WorkflowDiagram({ tablaName, solicitudURL, tablaId }: Wo
     setShowCabeceraForm(true);
   };
 
+  const handleFileClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.name.match(/\.(txt|csv)$/)) {
+        alert('Por favor seleccione un archivo .txt o .csv');
+        return;
+      }
+      setSelectedFile(file);
+      // Simulate processing
+      setTimeout(() => {
+        setSelectedFile(null);
+        alert('Archivo procesado correctamente');
+      }, 1500);
+    }
+  };
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 'gobierno':
@@ -49,9 +72,28 @@ export default function WorkflowDiagram({ tablaName, solicitudURL, tablaId }: Wo
                 {/* Sample Component */}
                 <div className="w-40 flex-shrink-0">
                   <div className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm text-center">
-                    <div className="flex items-center justify-center mb-2">
-                      <span className="text-sm font-medium">Muestra</span>
-                      <ArrowUpTrayIcon className="h-4 w-4 text-gray-500 ml-2" />
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileChange}
+                      accept=".txt,.csv"
+                      className="hidden"
+                    />
+                    <div 
+                      className="flex items-center justify-center mb-2 cursor-pointer group"
+                      onClick={handleFileClick}
+                    >
+                      <span className="text-sm font-medium group-hover:text-blue-600 transition-colors">
+                        {selectedFile ? selectedFile.name : 'Muestra'}
+                      </span>
+                      <ArrowUpTrayIcon 
+                        className={cn(
+                          "h-4 w-4 ml-2 transition-colors",
+                          selectedFile 
+                            ? "text-green-500" 
+                            : "text-gray-500 group-hover:text-blue-600"
+                        )}
+                      />
                     </div>
                     <div className="text-xs text-gray-500">*.txt, *.csv</div>
                   </div>
