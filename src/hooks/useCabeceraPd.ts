@@ -2,14 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 
-interface CabeceraPd {
-  descripcionObjetivo: string;
-  uuaRaw: string;
-  uuaMaster: string;
-  historicoRequerido: string;
-  agrupacionParticiones: string;
-}
-
 // Define the fields we want to count
 const FORM_FIELDS = [
   'descripcionObjetivo',
@@ -19,9 +11,12 @@ const FORM_FIELDS = [
   'agrupacionParticiones'
 ] as const;
 
+type FormField = typeof FORM_FIELDS[number];
+type CabeceraPdData = Record<FormField, string>;
+
 export function useCabeceraPd(tablaId: string) {
   const [filledFields, setFilledFields] = useState(0);
-  const [totalFields, setTotalFields] = useState(FORM_FIELDS.length);
+  const totalFields = FORM_FIELDS.length;
   const [loading, setLoading] = useState(true);
 
   const fetchCabeceraPd = useCallback(async () => {
@@ -32,7 +27,7 @@ export function useCabeceraPd(tablaId: string) {
       
       if (!querySnapshot.empty) {
         const doc = querySnapshot.docs[0];
-        const data = doc.data();
+        const data = doc.data() as CabeceraPdData;
         
         // Count filled fields by checking each field in our predefined list
         const filled = FORM_FIELDS.reduce((count, field) => {
