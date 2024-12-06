@@ -5,6 +5,7 @@ import { ArrowUpTrayIcon } from '@heroicons/react/24/solid';
 import PreDictionaryProgress from './PreDictionaryProgress';
 import CabeceraPdForm from './CabeceraPdForm';
 import { useCabeceraPd } from '@/hooks/useCabeceraPd';
+import { cn } from '@/lib/utils';
 
 type TabType = 'refinamiento' | 'gobierno' | 'componentes';
 
@@ -29,7 +30,9 @@ export default function WorkflowDiagram({ tablaName, solicitudURL, tablaId }: Wo
 
   const handlePlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setShowProgress(true);
+    if (filledFields === totalFields) {
+      setShowProgress(true);
+    }
   };
 
   const handleProgressClick = () => {
@@ -62,8 +65,16 @@ export default function WorkflowDiagram({ tablaName, solicitudURL, tablaId }: Wo
                   <div className="border border-gray-200 rounded-lg bg-white shadow-sm">
                     <div className="border-b border-gray-200 p-2 flex items-center justify-between">
                       <PlayIcon 
-                        className="h-4 w-4 text-gray-600 cursor-pointer hover:text-blue-600 transition-colors"
+                        className={cn(
+                          "h-4 w-4 text-gray-600",
+                          filledFields === totalFields 
+                            ? "cursor-pointer hover:text-blue-600 transition-colors" 
+                            : "opacity-50 cursor-not-allowed"
+                        )}
                         onClick={handlePlayClick}
+                        title={filledFields === totalFields 
+                          ? "Iniciar proceso" 
+                          : "Complete todos los campos de la cabecera para continuar"}
                       />
                       <span 
                         className="text-xs text-gray-500 cursor-pointer hover:text-blue-600 transition-colors"
