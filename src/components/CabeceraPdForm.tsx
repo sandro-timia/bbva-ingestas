@@ -2,7 +2,7 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { addDoc, collection, query, where, getDocs, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 
 interface CabeceraPdFormProps {
