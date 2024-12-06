@@ -30,7 +30,7 @@ export default function CabeceraPdForm({ isOpen, onClose, tablaId }: CabeceraPdF
     e.preventDefault();
     try {
       const nonEmptyFields = Object.fromEntries(
-        Object.entries(formData).filter(([_, value]) => value.trim() !== '')
+        Object.entries(formData).filter(([, value]) => value.trim() !== '')
       );
       
       await addDoc(collection(db, 'cabeceraPd'), {
