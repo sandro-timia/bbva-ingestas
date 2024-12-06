@@ -11,10 +11,9 @@ interface CabeceraPdFormProps {
   tablaId: string;
 }
 
-const RequiredLabel = ({ children }: { children: React.ReactNode }) => (
+const Label = ({ children }: { children: React.ReactNode }) => (
   <label className="block text-sm font-medium text-gray-900">
     {children}
-    <span className="text-red-500 ml-1">*</span>
   </label>
 );
 
@@ -30,8 +29,12 @@ export default function CabeceraPdForm({ isOpen, onClose, tablaId }: CabeceraPdF
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const nonEmptyFields = Object.fromEntries(
+        Object.entries(formData).filter(([_, value]) => value.trim() !== '')
+      );
+      
       await addDoc(collection(db, 'cabeceraPd'), {
-        ...formData,
+        ...nonEmptyFields,
         tablaId,
         fechaCreacion: new Date()
       });
@@ -77,9 +80,8 @@ export default function CabeceraPdForm({ isOpen, onClose, tablaId }: CabeceraPdF
                     <form onSubmit={handleSubmit} className="flex-1 divide-y divide-gray-200 px-4 py-6 sm:px-6">
                       <div className="space-y-6 pb-5">
                         <div>
-                          <RequiredLabel>Descripción del Objetivo</RequiredLabel>
+                          <Label>Descripción del Objeto</Label>
                           <textarea
-                            required
                             rows={3}
                             value={formData.descripcionObjetivo}
                             onChange={(e) => setFormData({ ...formData, descripcionObjetivo: e.target.value })}
@@ -88,10 +90,9 @@ export default function CabeceraPdForm({ isOpen, onClose, tablaId }: CabeceraPdF
                         </div>
 
                         <div>
-                          <RequiredLabel>UUA RAW</RequiredLabel>
+                          <Label>UUA RAW</Label>
                           <input
                             type="text"
-                            required
                             value={formData.uuaRaw}
                             onChange={(e) => setFormData({ ...formData, uuaRaw: e.target.value })}
                             className="mt-2 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600"
@@ -99,10 +100,9 @@ export default function CabeceraPdForm({ isOpen, onClose, tablaId }: CabeceraPdF
                         </div>
 
                         <div>
-                          <RequiredLabel>UUA MASTER</RequiredLabel>
+                          <Label>UUA MASTER</Label>
                           <input
                             type="text"
-                            required
                             value={formData.uuaMaster}
                             onChange={(e) => setFormData({ ...formData, uuaMaster: e.target.value })}
                             className="mt-2 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600"
@@ -110,10 +110,9 @@ export default function CabeceraPdForm({ isOpen, onClose, tablaId }: CabeceraPdF
                         </div>
 
                         <div>
-                          <RequiredLabel>Histórico Requerido</RequiredLabel>
+                          <Label>Histórico Requerido</Label>
                           <input
                             type="text"
-                            required
                             value={formData.historicoRequerido}
                             onChange={(e) => setFormData({ ...formData, historicoRequerido: e.target.value })}
                             className="mt-2 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600"
@@ -121,10 +120,9 @@ export default function CabeceraPdForm({ isOpen, onClose, tablaId }: CabeceraPdF
                         </div>
 
                         <div>
-                          <RequiredLabel>Agrupación Particiones</RequiredLabel>
+                          <Label>Agrupación Particiones</Label>
                           <input
                             type="text"
-                            required
                             value={formData.agrupacionParticiones}
                             onChange={(e) => setFormData({ ...formData, agrupacionParticiones: e.target.value })}
                             className="mt-2 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600"
