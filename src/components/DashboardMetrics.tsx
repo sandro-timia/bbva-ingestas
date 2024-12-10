@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { collection, query, getDocs } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { ClockIcon, TableCellsIcon, CheckCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
@@ -23,6 +23,11 @@ interface Ingesta {
 interface Tabla {
   id: string;
   estado: string;
+}
+
+interface TimelineData {
+  name: string;
+  tiempo: number;
 }
 
 const MetricCard = ({ title, value, icon, trend, color }: MetricCardProps) => (
@@ -51,7 +56,7 @@ export default function DashboardMetrics() {
     averageTime: '0',
     pendingTables: 0
   });
-  const [timelineData, setTimelineData] = useState<any[]>([]);
+  const [timelineData, setTimelineData] = useState<TimelineData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -59,7 +64,6 @@ export default function DashboardMetrics() {
       try {
         const ingestasSnapshot = await getDocs(collection(db, 'ingestas'));
         const tablasSnapshot = await getDocs(collection(db, 'tablas'));
-        const cabeceraPdSnapshot = await getDocs(collection(db, 'cabeceraPd'));
 
         // Calculate metrics
         const ingestas = ingestasSnapshot.docs.map(doc => ({
