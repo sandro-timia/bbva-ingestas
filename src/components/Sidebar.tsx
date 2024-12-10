@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { HomeIcon, BeakerIcon, TableCellsIcon, Cog6ToothIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline';
+import { useSidebar } from '@/context/SidebarContext';
 
 const navItems = [
   { icon: HomeIcon, label: 'Inicio', href: '/' },
@@ -14,7 +14,7 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const { isExpanded, setIsExpanded } = useSidebar();
 
   return (
     <div 

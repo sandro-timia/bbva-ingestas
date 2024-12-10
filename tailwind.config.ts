@@ -12,6 +12,9 @@ const config: Config = {
         primary: "#0A3977",
         secondary: "#00A3FF",
       },
+      screens: {
+        'sidebar-expanded': {'raw': '(min-width: calc(768px + 180px))'},
+      },
     },
   },
   plugins: [],
