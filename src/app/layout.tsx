@@ -30,7 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Sidebar />
-        <div className="pl-[60px]">
+        <div className="pl-[60px] transition-all duration-300">
           {children}
         </div>
       </body>
