@@ -31,9 +31,9 @@ export default function RootLayout({
         <SidebarProvider>
           <div className="flex">
             <Sidebar />
-            <div className="flex-1 transition-all duration-300 pl-[60px] sidebar-expanded:pl-[180px]">
+            <main className={`flex-1 transition-all duration-300`}>
               {children}
-            </div>
+            </main>
           </div>
         </SidebarProvider>
       </body>
